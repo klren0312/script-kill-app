@@ -21,6 +21,8 @@ docs
 *.sln
 *.sw?
 components.d.ts
-
+.env
 .agents
 .claude
+.codebuddy
+skills-lock.json
