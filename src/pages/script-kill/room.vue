@@ -226,8 +226,6 @@ onBeforeUnmount(() => {
 
 <template>
   <view class="room">
-    <view class="room__bg" />
-
     <!-- 自定义顶部状态栏 -->
     <view class="room__nav">
       <view class="room__nav-top">
@@ -354,12 +352,6 @@ onBeforeUnmount(() => {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-}
-
-.room__bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
   background:
     radial-gradient(700rpx 400rpx at 90% 0%, rgba(168, 85, 247, 0.16), transparent 70%),
     linear-gradient(180deg, #0f0f1a, #16162a);
@@ -494,5 +486,12 @@ onBeforeUnmount(() => {
 .room__tab-label {
   font-size: 26rpx;
   color: #8a8aa0;
+}
+</style>
+
+<style lang="scss">
+/* 页面根背景色兜底，防止下拉回弹露出白底 */
+page {
+  background-color: #0f0f1a;
 }
 </style>

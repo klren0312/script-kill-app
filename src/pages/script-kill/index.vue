@@ -136,7 +136,6 @@ onMounted(loadLobby)
 
 <template>
   <view class="lobby">
-    <view class="lobby__bg" />
     <view class="lobby__header">
       <text class="lobby__title">
         🎭 剧本杀工坊
@@ -263,12 +262,6 @@ onMounted(loadLobby)
   position: relative;
   min-height: 100vh;
   padding: 0 28rpx 60rpx;
-}
-
-.lobby__bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
   background:
     radial-gradient(800rpx 500rpx at 80% -10%, rgba(168, 85, 247, 0.18), transparent 70%),
     radial-gradient(700rpx 500rpx at -10% 20%, rgba(59, 130, 246, 0.12), transparent 70%),
@@ -497,5 +490,12 @@ onMounted(loadLobby)
   &::after {
     border: none;
   }
+}
+</style>
+
+<style lang="scss">
+/* 页面根背景色兜底，防止下拉回弹露出白底 */
+page {
+  background-color: #0f0f1a;
 }
 </style>
