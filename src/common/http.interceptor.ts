@@ -2,8 +2,15 @@ import type { RequestConfig, RequestInterceptor, RequestMeta, RequestOptions } f
 
 // 示例：演示如何使用token
 const token = ''
-// 演示
-const baseUrl = 'https://api.example.com'
+// 后端 REST 基地址：H5 开发期直连后端，生产改为 https://your-domain.com
+const baseUrl = import.meta.env.VITE_APP_API_BASE || 'http://127.0.0.1:3000'
+// 后端 WebSocket 基地址（ws/wss 协议）
+const wsBase = import.meta.env.VITE_APP_WS_BASE || 'ws://127.0.0.1:3000'
+
+/** 拼接 WebSocket 连接地址：GET /ws/games/:id?roleId=xxx */
+export function buildWsUrl(gameId: string, roleId: string): string {
+	return `${wsBase.replace(/\/$/, '')}/ws/games/${encodeURIComponent(gameId)}?roleId=${encodeURIComponent(roleId)}`
+}
 
 // 全局配置
 const httpRequestConfig: RequestConfig = {
@@ -64,10 +71,7 @@ function showLoading() {
 
 // 隐藏加载中，可以替换为uview-pro的u-loading-popup组件
 function hideLoading() {
-  // 代码示例使用settimeout，仅为演示，实际开发中去掉
-  setTimeout(() => {
-    uni.hideLoading()
-  }, 1000)
+  uni.hideLoading()
 }
 
 // 显示toast，可以替换为uview-pro的u-toast组件
@@ -79,14 +83,11 @@ function showToast(
   if (title.length === 0) {
     return
   }
-  // 代码示例使用settimeout，仅为演示，实际开发中去掉
-  setTimeout(() => {
-    uni.showToast({
-      title,
-      icon: title.length && title.length > 7 ? 'none' : icon,
-      duration: options.duration || 2000,
-    })
-  }, 1000)
+  uni.showToast({
+    title,
+    icon: title.length > 7 ? 'none' : icon,
+    duration: options.duration || 2000,
+  })
 }
 
 // 导出

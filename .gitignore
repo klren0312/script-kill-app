@@ -21,3 +21,6 @@ docs
 *.sln
 *.sw?
 components.d.ts
+
+.agents
+.claude

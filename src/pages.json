@@ -1,43 +1,17 @@
 {
   "pages": [
     {
-      "path": "pages/home/home"
+      "path": "pages/script-kill/index",
+      "style": {
+        "navigationBarTitleText": "剧本杀工坊"
+      }
     },
     {
-      "path": "pages/home/uview-intro"
-    },
-    {
-      "path": "pages/home/http-demo"
-    },
-    {
-      "path": "pages/home/pinia-demo"
-    },
-    {
-      "path": "pages/home/components-demo"
-    },
-    {
-      "path": "pages/home/create-demo"
-    },
-    {
-      "path": "pages/about/about"
-    },
-    {
-      "path": "pages/about/about-me"
-    },
-    {
-      "path": "pages/about/contributors"
-    },
-    {
-      "path": "pages/about/faq"
-    },
-    {
-      "path": "pages/about/guide"
-    },
-    {
-      "path": "pages/about/license"
-    },
-    {
-      "path": "pages/about/settings"
+      "path": "pages/script-kill/room",
+      "style": {
+        "navigationBarTitleText": "游戏房间",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
@@ -47,25 +21,10 @@
     "backgroundTextStyle": "@bgTxtStyle",
     "navigationBarBackgroundColor": "#000000",
     "navigationBarTextStyle": "@navTxtStyle",
-    "navigationBarTitleText": "uView Pro Starter",
+    "navigationBarTitleText": "剧本杀工坊",
     "navigationStyle": "custom"
-  },
-  "tabBar": {
-    "color": "@tabFontColor",
-    "selectedColor": "@tabSelectedColor",
-    "backgroundColor": "@tabBgColor",
-    "borderStyle": "@tabBorderStyle",
-    "list": [
-      {
-        "pagePath": "pages/home/home"
-      },
-      {
-        "pagePath": "pages/about/about"
-      }
-    ]
   },
   "easycom": {
     "autoscan": true
-  },
-  "subPackages": []
+  }
 }

@@ -1,4 +1,3 @@
-import * as Pinia from 'pinia'
 import uViewPro, { httpPlugin } from 'uview-pro'
 import { createSSRApp } from 'vue'
 import themes from '@/common/uview-pro.theme'
@@ -28,6 +27,5 @@ export function createApp() {
   app.use(store)
   return {
     app,
-    Pinia,
   }
 }

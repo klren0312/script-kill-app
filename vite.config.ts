@@ -18,7 +18,7 @@ export default defineConfig({
     UniRoot(),
     // https://uni-helper.js.org/vite-plugin-uni-components
     Components({
-      dts: true,
+      dts: process.env.NODE_ENV === 'development',
       resolvers: [ZPagingResolver(), uViewProResolver()],
     }),
     // https://uni-helper.js.org/plugin-uni
