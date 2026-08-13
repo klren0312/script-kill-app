@@ -32,4 +32,3 @@ function getPlatform() {
   // #endif
   return '未知平台'
 }
-

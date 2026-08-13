@@ -144,19 +144,19 @@ Download from HBuilderX plugin market or manually, and place uView Pro in the `u
 Import and register uView Pro in `main.ts`:
 
 ```js
-// main.ts
-import { createSSRApp } from 'vue';
 // npm method
-import uViewPro from 'uview-pro';
+import uViewPro from 'uview-pro'
+// main.ts
+import { createSSRApp } from 'vue'
 // uni_modules method
 // import uViewPro from "@/uni_modules/uview-pro";
 
 export function createApp() {
-    const app = createSSRApp(App);
-    app.use(uViewPro);
-    return {
-        app
-    };
+  const app = createSSRApp(App)
+  app.use(uViewPro)
+  return {
+    app
+  }
 }
 ```
 
@@ -190,18 +190,18 @@ Configure easycom rules in `pages.json` for automatic component import:
 ```json
 // pages.json
 {
-    "easycom": {
-        "autoscan": true,
-        "custom": {
-            // npm method
-            "^u-(.*)": "uview-pro/components/u-$1/u-$1.vue"
-            // uni_modules method
-            // "^u-(.*)": "@/uni_modules/uview-pro/components/u-$1/u-$1.vue"
-        }
-    },
-    "pages": [
-        // ...
-    ]
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      // npm method
+      "^u-(.*)": "uview-pro/components/u-$1/u-$1.vue"
+      // uni_modules method
+      // "^u-(.*)": "@/uni_modules/uview-pro/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [
+    // ...
+  ]
 }
 ```
 
@@ -217,12 +217,12 @@ For global Volar type support in CLI projects, add the following to `tsconfig.js
 
 ```json
 {
-    "compilerOptions": {
-        // npm method
-        "types": ["uview-pro/types"]
-        // uni_modules method
-        // "types": ["@/uni_modules/uview-pro/types"]
-    }
+  "compilerOptions": {
+    // npm method
+    "types": ["uview-pro/types"]
+    // uni_modules method
+    // "types": ["@/uni_modules/uview-pro/types"]
+  }
 }
 ```
 
@@ -234,7 +234,9 @@ After configuration, you can use uView Pro components directly in SFC without im
 
 ```vue
 <template>
-    <u-button type="primary">Button</u-button>
+  <u-button type="primary">
+    Button
+  </u-button>
 </template>
 ```
 

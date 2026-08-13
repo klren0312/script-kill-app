@@ -51,8 +51,8 @@ node dist/index.js # 生产启动（PORT/HOST 可覆盖）
 {
   "roles": {
     "generator": { "provider": "ant-ling", "model": "Ling-3.0-flash", "thinkingLevel": "high" },
-    "narrator":  { "provider": "sensenova", "model": "deepseek-v4-flash", "thinkingLevel": "medium" },
-    "player":    { "provider": "openrouter", "model": "openrouter/free", "thinkingLevel": "medium" }
+    "narrator": { "provider": "sensenova", "model": "deepseek-v4-flash", "thinkingLevel": "medium" },
+    "player": { "provider": "openrouter", "model": "openrouter/free", "thinkingLevel": "medium" }
   }
 }
 ```
@@ -109,7 +109,7 @@ SENSENOVA_API_KEY=...
 ### 3.4 游戏阶段（Phase）
 
 ```ts
-type Phase = "setup" | "reading" | "discussion" | "voting" | "reveal" | "finished";
+type Phase = 'setup' | 'reading' | 'discussion' | 'voting' | 'reveal' | 'finished'
 ```
 
 - `setup` → `reading`（建局后）→ `discussion`（多轮，每轮每人 1 次调查）→ `voting` → `reveal` → `finished`。
@@ -573,13 +573,14 @@ curl -X POST http://127.0.0.1:3000/api/games/01J9X...uuid/polish \
 **连接示例（浏览器）**：
 
 ```js
-const es = new EventSource(`/api/games/${gameId}/events`);
+const es = new EventSource(`/api/games/${gameId}/events`)
 es.onmessage = (e) => {
-  const data = JSON.parse(e.data);
-  if (data.type === "snapshot") renderSnapshot(data.snapshot);
-  else handleEvent(data); // GameEvent
-};
-es.onerror = () => { /* 浏览器会自动按 retry 重连 */ };
+  const data = JSON.parse(e.data)
+  if (data.type === 'snapshot')
+    renderSnapshot(data.snapshot)
+  else handleEvent(data) // GameEvent
+}
+es.onerror = () => { /* 浏览器会自动按 retry 重连 */ }
 ```
 
 **连接示例（curl）**：
@@ -625,20 +626,21 @@ WebSocket 端点为无法使用 SSE 的客户端（如微信小程序 `wx.connec
 **连接示例（微信小程序）**：
 
 ```js
-let ws;
+let ws
 function connect() {
   ws = wx.connectSocket({
     url: `ws://127.0.0.1:3000/ws/games/${gameId}?roleId=${roleId}`,
-  });
-  ws.onOpen(() => { /* 服务端会立即推送 snapshot 帧 */ });
+  })
+  ws.onOpen(() => { /* 服务端会立即推送 snapshot 帧 */ })
   ws.onMessage((evt) => {
-    const data = JSON.parse(evt.data);
-    if (data.type === "snapshot") renderSnapshot(data.snapshot);
-    else handleEvent(data);
-  });
-  ws.onClose(() => { /* 退避后重新 connect() */ });
+    const data = JSON.parse(evt.data)
+    if (data.type === 'snapshot')
+      renderSnapshot(data.snapshot)
+    else handleEvent(data)
+  })
+  ws.onClose(() => { /* 退避后重新 connect() */ })
 }
-connect();
+connect()
 ```
 
 **帧格式示例**：
@@ -669,13 +671,13 @@ connect();
 
 ```ts
 interface ScriptCard {
-  id: string;              // 剧本 ID
-  title: string;           // 标题
-  genre: string;           // 类型
-  description: string;     // 简介
-  playerCount: number;     // 玩家人数
-  estimatedMinutes: number;// 预计时长（分钟）
-  difficulty: string;      // 难度
+  id: string // 剧本 ID
+  title: string // 标题
+  genre: string // 类型
+  description: string // 简介
+  playerCount: number // 玩家人数
+  estimatedMinutes: number// 预计时长（分钟）
+  difficulty: string // 难度
 }
 ```
 
@@ -683,17 +685,17 @@ interface ScriptCard {
 
 ```ts
 interface ScriptSelectView {
-  id: string;
-  title: string;
-  genre: string;
-  description: string;
-  difficulty: string;
-  playerCount: number;
-  estimatedMinutes: number;
-  setting: { time: string; place: string; background: string };
-  roles: { id: string; name: string; public: string; goal: string }[];
-  locations: { id: string; name: string; description: string }[];
-  publicClues: { id: string; text: string }[];
+  id: string
+  title: string
+  genre: string
+  description: string
+  difficulty: string
+  playerCount: number
+  estimatedMinutes: number
+  setting: { time: string, place: string, background: string }
+  roles: { id: string, name: string, public: string, goal: string }[]
+  locations: { id: string, name: string, description: string }[]
+  publicClues: { id: string, text: string }[]
 }
 ```
 
@@ -701,50 +703,50 @@ interface ScriptSelectView {
 
 ```ts
 interface PublicSnapshot {
-  id: string;               // 游戏 ID
-  scriptId: string;
-  phase: Phase;             // 见 3.4
-  createdAt: number;        // 毫秒时间戳
-  updatedAt: number;
-  humanRoleId: string;      // 当前玩家角色 ID
-  order: string[];          // 行动顺序（角色 ID 列表）
-  turnIndex: number;        // 当前轮内序号
-  round: number;            // 当前轮次
-  maxRounds: number;        // 最大轮次（默认 4）
-  currentTurn: string | null; // 当前回合角色 ID
-  usedInvestigation: Record<string, boolean>; // 各角色本回合是否已调查
-  roleClues: Record<string, string[]>;        // 仅含本人持有的线索 ID
-  votes: Record<string, string | null>;       // 角色 ID -> 投票目标/null
-  publicEvents: GameEvent[];                  // 公开事件流
-  myPrivateEvents: GameEvent[];               // 本人私密事件
-  winner?: "innocents" | "culprit";           // 结束后获胜阵营
+  id: string // 游戏 ID
+  scriptId: string
+  phase: Phase // 见 3.4
+  createdAt: number // 毫秒时间戳
+  updatedAt: number
+  humanRoleId: string // 当前玩家角色 ID
+  order: string[] // 行动顺序（角色 ID 列表）
+  turnIndex: number // 当前轮内序号
+  round: number // 当前轮次
+  maxRounds: number // 最大轮次（默认 4）
+  currentTurn: string | null // 当前回合角色 ID
+  usedInvestigation: Record<string, boolean> // 各角色本回合是否已调查
+  roleClues: Record<string, string[]> // 仅含本人持有的线索 ID
+  votes: Record<string, string | null> // 角色 ID -> 投票目标/null
+  publicEvents: GameEvent[] // 公开事件流
+  myPrivateEvents: GameEvent[] // 本人私密事件
+  winner?: 'innocents' | 'culprit' // 结束后获胜阵营
 }
 ```
 
 ### 6.4 GameEvent
 
 ```ts
-type EventType =
-  | "narrator" | "speak" | "whisper" | "investigate"
-  | "show" | "vote" | "phase" | "turn" | "system" | "game_end";
+type EventType
+  = | 'narrator' | 'speak' | 'whisper' | 'investigate'
+    | 'show' | 'vote' | 'phase' | 'turn' | 'system' | 'game_end'
 
 interface GameEvent {
-  id: string;
-  at: number;              // 毫秒时间戳
-  type: EventType;
-  roleId?: string;
-  roleName?: string;
-  target?: string | null;  // whisper 目标 / show 的 clueId
-  targetName?: string;
-  text?: string;
-  phase?: Phase;
-  scope?: "public" | string; // 私密事件填收方角色 ID
-  winner?: string;
-  votes?: Record<string, string | null>;
-  truth?: Truth;           // 仅 game_end 含完整真相
-  round?: number;
-  currentTurn?: string | null;
-  humanTurn?: boolean;
+  id: string
+  at: number // 毫秒时间戳
+  type: EventType
+  roleId?: string
+  roleName?: string
+  target?: string | null // whisper 目标 / show 的 clueId
+  targetName?: string
+  text?: string
+  phase?: Phase
+  scope?: 'public' | string // 私密事件填收方角色 ID
+  winner?: string
+  votes?: Record<string, string | null>
+  truth?: Truth // 仅 game_end 含完整真相
+  round?: number
+  currentTurn?: string | null
+  humanTurn?: boolean
 }
 ```
 
@@ -752,10 +754,10 @@ interface GameEvent {
 
 ```ts
 interface Truth {
-  culprit: string;         // 真凶角色 ID
-  motive: string;          // 动机
-  method: string;          // 手法
-  timeline: { time: string; event: string }[];
+  culprit: string // 真凶角色 ID
+  motive: string // 动机
+  method: string // 手法
+  timeline: { time: string, event: string }[]
 }
 ```
 

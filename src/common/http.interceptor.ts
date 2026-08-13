@@ -9,7 +9,7 @@ const wsBase = import.meta.env.VITE_APP_WS_BASE || 'ws://127.0.0.1:3000'
 
 /** 拼接 WebSocket 连接地址：GET /ws/games/:id?roleId=xxx */
 export function buildWsUrl(gameId: string, roleId: string): string {
-	return `${wsBase.replace(/\/$/, '')}/ws/games/${encodeURIComponent(gameId)}?roleId=${encodeURIComponent(roleId)}`
+  return `${wsBase.replace(/\/$/, '')}/ws/games/${encodeURIComponent(gameId)}?roleId=${encodeURIComponent(roleId)}`
 }
 
 // 全局配置
