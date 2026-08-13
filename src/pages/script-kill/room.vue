@@ -261,7 +261,7 @@ onBeforeUnmount(() => {
 
     <!-- 内容区 -->
     <view class="room__body">
-      <view v-show="activeTab === 'chat'" class="room__pane">
+      <view v-show="activeTab === 'chat'" class="room__pane room__pane--chat">
         <view class="room__chat-switch">
           <view
             class="room__chat-tab" :class="{ 'room__chat-tab--on': chatMode === 'public' }"
@@ -277,6 +277,7 @@ onBeforeUnmount(() => {
           </view>
         </view>
         <sk-chat-panel
+          class="room__chat-panel"
           :events="store.allEvents"
           :my-role-id="store.humanRoleId"
           :can-speak="canSpeak"
@@ -433,7 +434,21 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
+/* 仅聊天面板需要纵向 flex 布局（切换条 + 聊天面板占满剩余空间）；
+   其余面板（推理/线索/角色/投票）保持块级布局，避免 scroll-view 作为 flex 子项引发 x 轴溢出 */
+.room__pane--chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.room__chat-panel {
+  flex: 1;
+  min-height: 0;
+}
+
 .room__chat-switch {
+  flex-shrink: 0;
   display: flex;
   gap: 14rpx;
   padding: 16rpx 24rpx 0;

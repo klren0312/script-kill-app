@@ -100,9 +100,11 @@ const emit = defineEmits<{
 
 .sk-clue__text {
   flex: 1;
+  min-width: 0;
   font-size: 24rpx;
   line-height: 1.6;
   color: #edeDF5;
+  word-break: break-word;
 }
 
 .sk-clue__show {

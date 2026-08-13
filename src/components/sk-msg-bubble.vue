@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import type { GameEvent } from '@/api/scriptKillTypes'
+import type { EventType, GameEvent } from '@/api/scriptKillTypes'
 
 defineProps<{
   event: GameEvent
   isMine: boolean
 }>()
+
+// 仅个人消息类事件（发言/私聊/调查/出示）应用"我的消息"右对齐与渐变样式；
+// turn/phase/system 等游戏广播事件即使 roleId 命中当前玩家也不右对齐，避免错位
+const MINE_TYPES: ReadonlySet<EventType> = new Set(['speak', 'whisper', 'investigate', 'show'])
 
 const labelMap: Record<string, string> = {
   narrator: '📜 主持人',
@@ -21,7 +25,7 @@ const labelMap: Record<string, string> = {
 </script>
 
 <template>
-  <view class="sk-msg" :class="[`sk-msg--${event.type}`, { 'sk-msg--mine': isMine }]">
+  <view class="sk-msg" :class="[`sk-msg--${event.type}`, { 'sk-msg--mine': isMine && MINE_TYPES.has(event.type) }]">
     <view v-if="event.roleName && (event.type === 'speak' || event.type === 'whisper' || event.type === 'show')" class="sk-msg__name">
       {{ event.roleName }}
       <text v-if="event.type === 'whisper'" class="sk-msg__tag">

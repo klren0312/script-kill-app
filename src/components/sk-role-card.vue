@@ -196,9 +196,11 @@ defineProps<{
 }
 
 .sk-rolecard__rel-text {
+  min-width: 0;
   font-size: 24rpx;
   line-height: 1.6;
   color: #b8b8c8;
+  word-break: break-word;
 }
 
 .sk-rolecard__none {
