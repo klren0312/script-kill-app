@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ScriptCard } from '@/api/scriptKillTypes'
+import SkMarkdown from './sk-markdown.vue'
 
 defineProps<{
   script: ScriptCard
@@ -18,9 +19,7 @@ defineEmits<{ (e: 'select', id: string): void }>()
         {{ script.genre }}
       </view>
     </view>
-    <text class="sk-card__desc">
-      {{ script.description }}
-    </text>
+    <SkMarkdown :source="script.description" />
     <view class="sk-card__meta">
       <view class="sk-chip">
         <text class="sk-chip__icon">
@@ -90,18 +89,6 @@ defineEmits<{ (e: 'select', id: string): void }>()
   color: #c084fc;
   background: rgba(168, 85, 247, 0.16);
   border-radius: 999rpx;
-}
-
-.sk-card__desc {
-  display: block;
-  font-size: 24rpx;
-  line-height: 1.6;
-  color: #b8b8c8;
-  margin-bottom: 20rpx;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .sk-card__meta {

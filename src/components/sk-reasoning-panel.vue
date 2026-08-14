@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { GameEvent } from '@/api/scriptKillTypes'
 import { computed } from 'vue'
+import SkMarkdown from './sk-markdown.vue'
 
 const props = defineProps<{
   events: GameEvent[]
@@ -34,9 +35,7 @@ const reasoning = computed(() => {
           {{ r.name }}
         </text>
       </view>
-      <text class="sk-reason__text">
-        {{ r.text }}
-      </text>
+      <SkMarkdown v-if="r.text" :source="r.text" />
     </view>
   </scroll-view>
 </template>
@@ -105,11 +104,4 @@ const reasoning = computed(() => {
   color: #c084fc;
 }
 
-.sk-reason__text {
-  display: block;
-  font-size: 25rpx;
-  line-height: 1.7;
-  color: #d8d8e8;
-  word-break: break-word;
-}
 </style>

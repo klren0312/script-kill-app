@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RoleSelectInfo } from '@/api/scriptKillTypes'
+import SkMarkdown from './sk-markdown.vue'
 
 defineProps<{
   role: RoleSelectInfo
@@ -21,16 +22,12 @@ defineEmits<{ (e: 'choose', id: string): void }>()
       <text class="sk-role__name">
         {{ role.name }}
       </text>
-      <text class="sk-role__public">
-        {{ role.public }}
-      </text>
+      <SkMarkdown :source="role.public" />
       <view class="sk-role__goal">
         <text class="sk-role__goal-label">
           目标
         </text>
-        <text class="sk-role__goal-text">
-          {{ role.goal }}
-        </text>
+        <SkMarkdown :source="role.goal" class="sk-role__goal-text" />
       </view>
     </view>
     <view v-if="selected" class="sk-role__check">
@@ -87,18 +84,6 @@ defineEmits<{ (e: 'choose', id: string): void }>()
   font-weight: 600;
   color: #edeDF5;
   margin-bottom: 6rpx;
-}
-
-.sk-role__public {
-  display: block;
-  font-size: 23rpx;
-  line-height: 1.5;
-  color: #b8b8c8;
-  margin-bottom: 12rpx;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .sk-role__goal {

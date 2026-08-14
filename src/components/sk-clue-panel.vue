@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RoleSelectInfo } from '@/api/scriptKillTypes'
+import SkMarkdown from './sk-markdown.vue'
 
 defineProps<{
   myClueTexts: { id: string, text: string }[]
@@ -25,9 +26,7 @@ const emit = defineEmits<{
         <text>暂无线索，先在讨论中调查或获取证据</text>
       </view>
       <view v-for="c in myClueTexts" :key="c.id" class="sk-clue__item">
-        <text class="sk-clue__text">
-          {{ c.text }}
-        </text>
+        <SkMarkdown :source="c.text" />
         <button
           v-if="canInvestigate"
           class="sk-clue__show"
@@ -96,15 +95,6 @@ const emit = defineEmits<{
   border-radius: 16rpx;
   background: rgba(245, 158, 11, 0.1);
   border: 1rpx solid rgba(245, 158, 11, 0.28);
-}
-
-.sk-clue__text {
-  flex: 1;
-  min-width: 0;
-  font-size: 24rpx;
-  line-height: 1.6;
-  color: #edeDF5;
-  word-break: break-word;
 }
 
 .sk-clue__show {

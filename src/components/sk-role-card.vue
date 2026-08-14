@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HumanRoleView } from '@/api/scriptKillTypes'
+import SkMarkdown from './sk-markdown.vue'
 
 defineProps<{
   view: HumanRoleView | null
@@ -26,27 +27,21 @@ defineProps<{
       <text class="sk-rolecard__label">
         📖 人设
       </text>
-      <text class="sk-rolecard__text">
-        {{ view.role.public }}
-      </text>
+      <SkMarkdown :source="view.role.public" />
     </view>
 
     <view class="sk-rolecard__block sk-rolecard__block--secret">
       <text class="sk-rolecard__label sk-rolecard__label--secret">
         🤫 秘密（仅你可见）
       </text>
-      <text class="sk-rolecard__text">
-        {{ view.role.secret }}
-      </text>
+      <SkMarkdown :source="view.role.secret" />
     </view>
 
     <view class="sk-rolecard__block">
       <text class="sk-rolecard__label sk-rolecard__label--goal">
         🎯 你的目标
       </text>
-      <text class="sk-rolecard__text">
-        {{ view.role.goal }}
-      </text>
+      <SkMarkdown :source="view.role.goal" />
     </view>
 
     <view v-if="Object.keys(view.role.relationships).length" class="sk-rolecard__block">
@@ -61,9 +56,7 @@ defineProps<{
         <text class="sk-rolecard__rel-name">
           {{ name }}
         </text>
-        <text class="sk-rolecard__rel-text">
-          {{ rel }}
-        </text>
+        <SkMarkdown :source="rel" class="sk-rolecard__rel-text" />
       </view>
     </view>
 
@@ -79,7 +72,7 @@ defineProps<{
         :key="c.id"
         class="sk-rolecard__clue"
       >
-        <text>{{ c.text }}</text>
+        <SkMarkdown :source="c.text" />
       </view>
     </view>
   </scroll-view>
@@ -173,14 +166,6 @@ defineProps<{
   &--goal {
     color: #34d399;
   }
-}
-
-.sk-rolecard__text {
-  display: block;
-  font-size: 25rpx;
-  line-height: 1.7;
-  color: #d8d8e8;
-  word-break: break-word;
 }
 
 .sk-rolecard__rel {

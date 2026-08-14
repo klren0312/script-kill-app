@@ -269,7 +269,7 @@ onMounted(loadLobby)
 }
 
 .lobby__header {
-  padding: 80rpx 8rpx 36rpx;
+  padding: calc(env(safe-area-inset-top) + 36rpx) 8rpx 36rpx;
 }
 
 .lobby__title {

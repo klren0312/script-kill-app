@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { EventType, GameEvent } from '@/api/scriptKillTypes'
+import SkMarkdown from './sk-markdown.vue'
 
 defineProps<{
   event: GameEvent
@@ -26,7 +27,7 @@ const labelMap: Record<string, string> = {
 
 <template>
   <view class="sk-msg" :class="[`sk-msg--${event.type}`, { 'sk-msg--mine': isMine && MINE_TYPES.has(event.type) }]">
-    <view v-if="event.roleName && (event.type === 'speak' || event.type === 'whisper' || event.type === 'show')" class="sk-msg__name">
+    <view v-if="event.roleName && (event.type === 'narrator' || event.type === 'speak' || event.type === 'whisper' || event.type === 'show')" class="sk-msg__name">
       {{ event.roleName }}
       <text v-if="event.type === 'whisper'" class="sk-msg__tag">
         私聊
@@ -41,27 +42,19 @@ const labelMap: Record<string, string> = {
         <text class="sk-msg__text">
           {{ event.roleName }} 调查了 {{ event.targetName }}：
         </text>
-        <text class="sk-msg__text sk-msg__text--hl">
-          {{ event.text }}
-        </text>
+        <SkMarkdown v-if="event.text" :source="event.text" :color="'#f59e0b'" />
       </template>
       <template v-else-if="event.type === 'show'">
         <text class="sk-msg__text">
           {{ event.roleName }} 出示了线索：
         </text>
-        <text class="sk-msg__text sk-msg__text--hl">
-          {{ event.text }}
-        </text>
+        <SkMarkdown v-if="event.text" :source="event.text" :color="'#f59e0b'" />
       </template>
       <template v-else-if="event.type === 'vote'">
-        <text class="sk-msg__text">
-          {{ event.text || `${event.roleName} 已投票` }}
-        </text>
+        <SkMarkdown :source="event.text || `${event.roleName} 已投票`" />
       </template>
       <template v-else>
-        <text class="sk-msg__text">
-          {{ event.text }}
-        </text>
+        <SkMarkdown v-if="event.text" :source="event.text" />
       </template>
     </view>
   </view>
@@ -150,9 +143,5 @@ const labelMap: Record<string, string> = {
 .sk-msg__text {
   display: block;
   word-break: break-word;
-
-  &--hl {
-    color: #f59e0b;
-  }
 }
 </style>
