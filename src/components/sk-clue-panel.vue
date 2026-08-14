@@ -98,8 +98,12 @@ const emit = defineEmits<{
 }
 
 .sk-clue__show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   height: 56rpx;
+  line-height: 1;
   padding: 0 24rpx;
   font-size: 22rpx;
   color: #0f0f1a;

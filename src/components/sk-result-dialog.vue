@@ -168,8 +168,12 @@ const winnerText = computed(() => {
 }
 
 .sk-result__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0 28rpx 28rpx;
   height: 80rpx;
+  line-height: 1;
   font-size: 28rpx;
   color: #fff;
   border: none;

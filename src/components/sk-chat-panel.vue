@@ -11,7 +11,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'send', payload: { content: string, type: 'speak' | 'whisper' })
+  (e: 'send', payload: { content: string, type: 'speak' | 'whisper' }): void
 }>()
 
 const input = ref('')
@@ -34,7 +34,7 @@ function onSend() {
     uni.showToast({ title: '现在不是你的回合', icon: 'none' })
     return
   }
-  emit('send', { content: text, type: props.mode })
+  emit('send', { content: text, type: props.mode === 'whisper' ? 'whisper' : 'speak' })
   input.value = ''
 }
 </script>
@@ -114,13 +114,13 @@ function onSend() {
   border-radius: 999rpx;
 }
 
-.sk-chat__ph {
-  color: #6a6a80;
-}
-
 .sk-chat__send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   height: 72rpx;
+  line-height: 1;
   padding: 0 36rpx;
   font-size: 26rpx;
   color: #fff;
@@ -131,5 +131,12 @@ function onSend() {
   &::after {
     border: none;
   }
+}
+</style>
+
+<style lang="scss">
+/* placeholder 挂在原生 input 内部节点，scoped 属性选择器命中不到，必须放在非 scoped 块 */
+.sk-chat__ph {
+  color: #6a6a80;
 }
 </style>

@@ -324,7 +324,6 @@ onMounted(loadLobby)
 .lobby__ph {
   color: #6a6a80;
 }
-
 .lobby__row {
   display: flex;
   align-items: center;
@@ -366,8 +365,12 @@ onMounted(loadLobby)
 }
 
 .lobby__gen-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 30rpx;
   height: 84rpx;
+  line-height: 1;
   font-size: 28rpx;
   color: #fff;
   border: none;
@@ -431,7 +434,11 @@ onMounted(loadLobby)
 }
 
 .lobby__room-join {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 60rpx;
+  line-height: 1;
   padding: 0 32rpx;
   font-size: 24rpx;
   color: #fff;
@@ -479,8 +486,12 @@ onMounted(loadLobby)
 }
 
 .role-pop__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 24rpx;
   height: 84rpx;
+  line-height: 1;
   font-size: 28rpx;
   color: #fff;
   border: none;
@@ -497,5 +508,10 @@ onMounted(loadLobby)
 /* 页面根背景色兜底，防止下拉回弹露出白底 */
 page {
   background-color: #0f0f1a;
+}
+
+/* placeholder 挂在原生 input 内部节点，scoped 属性选择器命中不到，必须放在非 scoped 块 */
+.lobby__ph {
+  color: #6a6a80;
 }
 </style>
