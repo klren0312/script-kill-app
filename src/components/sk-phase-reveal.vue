@@ -135,7 +135,7 @@ const winnerText = computed(() => {
 .sk-phase-reveal__sub {
   margin-top: 18rpx;
   font-size: 25rpx;
-  color: #8a8aa0;
+  color: #b8b8c8;
 }
 
 .sk-phase-reveal__hint {

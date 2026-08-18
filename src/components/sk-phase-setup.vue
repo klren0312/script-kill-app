@@ -171,7 +171,7 @@ const myRole = computed(() => roles.value.find(r => r.id === store.humanRoleId))
 
 .sk-phase-setup__none {
   font-size: 23rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .sk-phase-setup__role {

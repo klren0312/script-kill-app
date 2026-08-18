@@ -2,7 +2,7 @@
 // 阶段调度黑盒（契约 §3）：按 store.phase 渲染对应阶段视图，接管阶段切换过渡、
 // 状态胶囊与轮次/回合展示；业务数据全部从 store 自取，room.vue 只传 connecting。
 import type { Component } from 'vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { PhaseActions } from './sk-phase-actions'
 import { resumeGame, sendAction, startGame, vote as voteApi } from '@/api/scriptKill'
 import type { GameEvent, HumanActionType, Phase } from '@/api/scriptKillTypes'
@@ -15,7 +15,12 @@ import skPhaseVoting from './sk-phase-voting.vue'
 import skPhaseReveal from './sk-phase-reveal.vue'
 import skPhaseFinished from './sk-phase-finished.vue'
 
-defineProps<{ connecting: boolean }>()
+const props = defineProps<{
+  connecting: boolean
+  attemptsLeft?: number
+  maxAttempts?: number
+  storeStatus?: string
+}>()
 
 const store = useScriptKillStore()
 
@@ -59,6 +64,15 @@ const currentTurnName = computed(() => {
   if (id === store.humanRoleId)
     return '你'
   return store.scriptView?.roles.find(r => r.id === id)?.name || id
+})
+
+const loadingText = computed(() => {
+  if (props.storeStatus === 'closed' || props.storeStatus === 'error') {
+    if ((props.attemptsLeft ?? 0) > 0)
+      return `连接失败，正在重新连接…（剩余 ${props.attemptsLeft} 次）`
+    return '无法连接到房间服务器，请重试'
+  }
+  return '连接中…'
 })
 
 // ---- 行为句柄（契约 §3） ----
@@ -172,11 +186,14 @@ const actions: PhaseActions = {
       </Transition>
     </view>
 
-    <!-- 连接中遮罩 -->
+    <!-- 连接中遮罩：connecting 显示倒计时提示，closed/error 提示失败/重试 -->
     <view v-if="connecting" class="sk-phase__loading">
-      <text class="sk-phase__loading-text">
-        连接中…
-      </text>
+      <view class="sk-phase__loading-inner">
+        <view v-if="connecting" class="sk-phase__loading-spinner" />
+        <text class="sk-phase__loading-text">
+          {{ loadingText }}
+        </text>
+      </view>
     </view>
   </view>
 </template>
@@ -245,5 +262,29 @@ const actions: PhaseActions = {
 .sk-phase__loading-text {
   font-size: 28rpx;
   color: #edeDF5;
+  text-align: center;
+}
+
+.sk-phase__loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18rpx;
+  padding: 0 60rpx;
+}
+
+.sk-phase__loading-spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 5rpx solid rgba(168, 85, 247, 0.28);
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: sk-phase-spin 0.9s linear infinite;
+}
+
+@keyframes sk-phase-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

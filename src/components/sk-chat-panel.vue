@@ -82,7 +82,7 @@ function onSend() {
   margin-top: 120rpx;
   text-align: center;
   font-size: 24rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .sk-chat__input {
@@ -137,6 +137,6 @@ function onSend() {
 <style lang="scss">
 /* placeholder 挂在原生 input 内部节点，scoped 属性选择器命中不到，必须放在非 scoped 块 */
 .sk-chat__ph {
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 </style>

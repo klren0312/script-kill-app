@@ -322,7 +322,7 @@ onMounted(loadLobby)
 }
 
 .lobby__ph {
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 .lobby__row {
   display: flex;
@@ -399,7 +399,7 @@ onMounted(loadLobby)
 
 .lobby__empty {
   font-size: 23rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .lobby__room {
@@ -512,6 +512,6 @@ page {
 
 /* placeholder 挂在原生 input 内部节点，scoped 属性选择器命中不到，必须放在非 scoped 块 */
 .lobby__ph {
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 </style>

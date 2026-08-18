@@ -226,7 +226,7 @@ const currentTurnName = computed(() => {
   text-align: center;
   padding: 22rpx 0;
   font-size: 24rpx;
-  color: #8a8aa0;
+  color: #b8b8c8;
 }
 
 .sk-phase-disc__overlay {

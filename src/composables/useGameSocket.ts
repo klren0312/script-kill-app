@@ -8,7 +8,7 @@ interface GameSocketOptions {
   gameId: string
   roleId: string
   onEvent: (msg: WsMessage) => void
-  onStatus?: (status: SocketStatus) => void
+  onStatus?: (status: SocketStatus, attempt: number, maxAttempts: number) => void
 }
 
 interface WsLike {
@@ -23,6 +23,8 @@ function isNativeWsAvailable(): boolean {
 
 const MAX_RETRIES = 5
 const BASE_DELAY = 1000
+// 单次握手超时：防止目标主机不可达时既不发 open 也不发 close，卡在"连接中"。
+const HANDSHAKE_TIMEOUT = 8000
 
 /**
  * 游戏 WebSocket 连接管理。connect 后可接收 snapshot / GameEvent，
@@ -32,6 +34,7 @@ export function useGameSocket() {
   let nativeWs: WebSocket | null = null
   let uniTask: any = null
   let timer: ReturnType<typeof setTimeout> | null = null
+  let handshakeTimer: ReturnType<typeof setTimeout> | null = null
   let closedByUser = false
   let opts: GameSocketOptions | null = null
   let retryCount = 0
@@ -43,8 +46,16 @@ export function useGameSocket() {
     }
   }
 
+  function clearHandshake() {
+    if (handshakeTimer) {
+      clearTimeout(handshakeTimer)
+      handshakeTimer = null
+    }
+  }
+
   function teardown() {
     clearTimer()
+    clearHandshake()
     if (nativeWs) {
       nativeWs.onopen = nativeWs.onmessage = nativeWs.onclose = nativeWs.onerror = null
       try {
@@ -96,20 +107,46 @@ export function useGameSocket() {
     retryCount = 0
     teardown()
     const url = buildWsUrl(options.gameId, options.roleId)
-    options.onStatus?.('connecting')
+    options.onStatus?.('connecting', retryCount + 1, MAX_RETRIES + 1)
 
     if (isNativeWsAvailable()) {
       const ws = new WebSocket(url)
       nativeWs = ws
-      ws.onopen = () => options.onStatus?.('open')
+      ws.onopen = () => {
+        retryCount = 0
+        clearHandshake()
+        options.onStatus?.('open', 0, MAX_RETRIES + 1)
+      }
       ws.onmessage = (e: MessageEvent) => handleMessage(String(e.data))
-      ws.onerror = () => options.onStatus?.('error')
+      // 单次握手超时兜底：主机不可达时触发 error→close→退避重连，避免卡在 connecting。
+      handshakeTimer = setTimeout(() => {
+        clearHandshake()
+        if (!closedByUser) {
+          try {
+            ws.close()
+          }
+          catch {
+            // ignore
+          }
+        }
+      }, HANDSHAKE_TIMEOUT)
+      ws.onerror = () => {
+        clearHandshake()
+        // error 只表示本此握手失败，本身不会触发 onclose——主动关闭以进入
+        // onclose 的统一路径，由它决定是否退避重连（避免 error 回调只上报不重连的卡死）。
+        try {
+          ws.close()
+        }
+        catch {
+          // ignore
+        }
+      }
       ws.onclose = () => {
         if (closedByUser) {
-          options.onStatus?.('closed')
+          options.onStatus?.('closed', MAX_RETRIES + 1, MAX_RETRIES + 1)
           return
         }
-        options.onStatus?.('closed')
+        options.onStatus?.('closed', retryCount + 1, MAX_RETRIES + 1)
         scheduleReconnect()
       }
     }
@@ -117,15 +154,38 @@ export function useGameSocket() {
       // 微信小程序 / App：uni.connectSocket
       const task = uni.connectSocket({ url, complete: undefined } as any) as any
       uniTask = task
-      task.onOpen(() => options.onStatus?.('open'))
+      handshakeTimer = setTimeout(() => {
+        clearHandshake()
+        if (!closedByUser) {
+          try {
+            uniTask?.close()
+          }
+          catch {
+            // ignore
+          }
+        }
+      }, HANDSHAKE_TIMEOUT)
+      task.onOpen(() => {
+        retryCount = 0
+        clearHandshake()
+        options.onStatus?.('open', 0, MAX_RETRIES + 1)
+      })
       task.onMessage((res: any) => handleMessage(String(res.data)))
-      task.onError(() => options.onStatus?.('error'))
+      task.onError(() => {
+        // 同原生：error 后主动关闭，交给 onClose 统一退避重连，避免只上报不重连。
+        try {
+          uniTask?.close()
+        }
+        catch {
+          // ignore
+        }
+      })
       task.onClose(() => {
         if (closedByUser) {
-          options.onStatus?.('closed')
+          options.onStatus?.('closed', MAX_RETRIES + 1, MAX_RETRIES + 1)
           return
         }
-        options.onStatus?.('closed')
+        options.onStatus?.('closed', retryCount + 1, MAX_RETRIES + 1)
         scheduleReconnect()
       })
     }

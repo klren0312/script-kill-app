@@ -58,7 +58,7 @@ const reasoning = computed(() => {
 
 .sk-reason__tip {
   font-size: 23rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .sk-reason__item {

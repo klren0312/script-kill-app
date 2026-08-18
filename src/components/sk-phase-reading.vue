@@ -107,7 +107,7 @@ const setting = computed(() => store.scriptView?.setting)
   display: block;
   margin-top: 8rpx;
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #b8b8c8;
 }
 
 .sk-phase-reading__setting {
@@ -177,7 +177,7 @@ const setting = computed(() => store.scriptView?.setting)
   width: 30rpx;
   height: 30rpx;
   font-size: 22rpx;
-  color: #0f0f1a;
+  color: #b8b8c8;
   border-radius: 50%;
   background: transparent;
 }

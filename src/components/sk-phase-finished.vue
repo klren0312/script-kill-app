@@ -174,8 +174,8 @@ const myRoleName = computed(() => store.myRoleView?.role.name || '我')
   margin-top: 18rpx;
   padding: 14rpx 18rpx;
   font-size: 23rpx;
-  color: #8a8aa0;
-  background: rgba(255, 255, 255, 0.04);
+  color: #b8b8c8;
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 12rpx;
 }
 
@@ -185,7 +185,7 @@ const myRoleName = computed(() => store.myRoleView?.role.name || '我')
   align-items: center;
   justify-content: center;
   font-size: 24rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .sk-phase-finished__footer {

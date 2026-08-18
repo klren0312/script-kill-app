@@ -190,7 +190,7 @@ defineProps<{
 
 .sk-rolecard__none {
   font-size: 22rpx;
-  color: #6a6a80;
+  color: #8a8aa0;
 }
 
 .sk-rolecard__clue {
@@ -206,7 +206,7 @@ defineProps<{
 .sk-rolecard__loading {
   margin-top: 160rpx;
   text-align: center;
-  color: #6a6a80;
+  color: #8a8aa0;
   font-size: 24rpx;
 }
 </style>
