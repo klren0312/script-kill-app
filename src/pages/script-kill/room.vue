@@ -1,14 +1,14 @@
 <script setup lang="ts">
 // 房间页 = 流程驱动单视图。只负责 init / WS 连接 / CTA 兜底 / 返回大厅；
 // 界面渲染全部委托给 <sk-phase-flow>（阶段调度黑盒，见契约 §3）。
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { getGame, getMe, getScript, resumeGame, startGame } from '@/api/scriptKill'
-import { useGameSocket } from '@/composables/useGameSocket'
+import { useGameSSE } from '@/composables/useGameSSE'
 import { useScriptKillStore } from '@/stores/scriptKill'
 import SkPhaseFlow from '@/components/sk-phase-flow.vue'
 
 const store = useScriptKillStore()
-const socket = useGameSocket()
+const socket = useGameSSE()
 
 const statusDot = computed(() => {
   switch (store.status) {
@@ -20,6 +20,10 @@ const statusDot = computed(() => {
       return '#6b7280'
   }
 })
+
+// 连接尝试计数（用 onStatus 的 attempt 参数驱动），用于"连接中"遮罩的倒计时/提示。
+const attemptsLeft = ref(0)
+const maxAttempts = ref(0)
 
 async function init() {
   if (!store.gameId) {
@@ -55,8 +59,12 @@ function connectWs() {
     gameId: store.gameId,
     roleId: store.humanRoleId,
     onEvent: msg => store.applyMessage(msg),
-    onStatus: (s) => {
+    onStatus: (s, attempt, max) => {
       store.setStatus(s)
+      if (attempt !== undefined)
+        attemptsLeft.value = Math.max(0, max - attempt + 1)
+      if (max !== undefined)
+        maxAttempts.value = max
       if (s !== 'open')
         return
       if (!didAutoStart) {
@@ -141,7 +149,12 @@ onBeforeUnmount(() => {
 
     <!-- 内容区：阶段调度黑盒，连接态交给 PhaseFlow 的 connecting 遮罩 -->
     <view class="room__body">
-      <sk-phase-flow :connecting="store.status === 'connecting'" />
+      <sk-phase-flow
+        :connecting="store.status === 'connecting' || store.status === 'closed' || store.status === 'error'"
+        :attempts-left="attemptsLeft"
+        :max-attempts="maxAttempts"
+        :store-status="store.status"
+      />
     </view>
   </view>
 </template>
@@ -200,6 +213,10 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  /* 顶部状态栏避让：所有阶段视图统一下沉 safe-area-inset-top，
+     避免导航栏下方的首屏内容（状态胶囊、轮次、阶段 head）被状态栏盖住。 */
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
 }
 </style>
 

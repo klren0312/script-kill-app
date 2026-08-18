@@ -7,7 +7,12 @@ const baseUrl = import.meta.env.VITE_APP_API_BASE || 'http://127.0.0.1:3000'
 // 后端 WebSocket 基地址（ws/wss 协议）
 const wsBase = import.meta.env.VITE_APP_WS_BASE || 'ws://127.0.0.1:3000'
 
-/** 拼接 WebSocket 连接地址：GET /ws/games/:id?roleId=xxx */
+/** 拼接 SSE 连接地址：GET /api/games/:id/events?roleId=xxx */
+export function buildSseUrl(gameId: string, roleId: string): string {
+  return `${baseUrl.replace(/\/$/, '')}/api/games/${encodeURIComponent(gameId)}/events?roleId=${encodeURIComponent(roleId)}`
+}
+
+/** 拼接 WebSocket 连接地址：GET /ws/games/:id?roleId=xxx（小程序降级用） */
 export function buildWsUrl(gameId: string, roleId: string): string {
   return `${wsBase.replace(/\/$/, '')}/ws/games/${encodeURIComponent(gameId)}?roleId=${encodeURIComponent(roleId)}`
 }
