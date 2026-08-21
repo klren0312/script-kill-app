@@ -2,6 +2,7 @@
 // 房间页 = 流程驱动单视图。只负责 init / WS 连接 / CTA 兜底 / 返回大厅；
 // 界面渲染全部委托给 <sk-phase-flow>（阶段调度黑盒，见契约 §3）。
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { getGame, getMe, getScript, resumeGame, startGame } from '@/api/scriptKill'
 import { useGameSSE } from '@/composables/useGameSSE'
 import { useSafeTop } from '@/composables/useSafeTop'
@@ -25,6 +26,11 @@ watch(
     }
   },
 )
+
+// 回前台时检查连接活性：后台挂起后 SSE 常被静默断开且不触发 onerror（配合服务端 30s 心跳）
+onShow(() => {
+  socket.checkAlive()
+})
 
 const statusDot = computed(() => {
   switch (store.status) {

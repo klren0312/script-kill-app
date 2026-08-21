@@ -121,6 +121,17 @@ export interface SnapshotEnvelope {
   snapshot: PublicSnapshot
 }
 
-export type WsMessage = SnapshotEnvelope | GameEvent
+/** 服务端心跳帧（预留）：后端当前以 `: heartbeat` 注释保活，若改为可观察的 ping 帧则命中此类型。
+ * 注意：type 必须是单字面量（不能写成 'ping' | 'heartbeat' 联合），
+ * 否则 TS 判别联合收窄无法在排除分支中消除该成员。 */
+export interface PingEnvelope {
+  type: 'ping'
+}
+
+export interface HeartbeatEnvelope {
+  type: 'heartbeat'
+}
+
+export type WsMessage = SnapshotEnvelope | GameEvent | PingEnvelope | HeartbeatEnvelope
 
 export type HumanActionType = 'speak' | 'whisper' | 'investigate' | 'show' | 'endTurn'

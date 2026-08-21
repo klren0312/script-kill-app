@@ -96,9 +96,11 @@ export const useScriptKillStore = defineStore('scriptKill', {
     setStatus(s: State['status']) {
       this.status = s
     },
-    /** 处理 WS 消息：snapshot 整体替换，GameEvent 增量归并 */
+    /** 处理 WS 消息：snapshot 整体替换，GameEvent 增量归并，心跳帧忽略 */
     applyMessage(msg: WsMessage) {
-      if ('snapshot' in msg && msg.type === 'snapshot') {
+      if (msg.type === 'ping' || msg.type === 'heartbeat')
+        return
+      if (msg.type === 'snapshot') {
         this.applySnapshot(msg.snapshot)
         return
       }
