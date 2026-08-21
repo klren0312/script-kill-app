@@ -12,9 +12,11 @@ import {
   listGames,
   listScripts,
 } from '@/api/scriptKill'
+import { useSafeTop } from '@/composables/useSafeTop'
 import { useScriptKillStore } from '@/stores/scriptKill'
 
 const store = useScriptKillStore()
+const { statusBarHeight } = useSafeTop()
 
 const scripts = ref<ScriptCard[]>([])
 const games = ref<GameListItem[]>([])
@@ -135,7 +137,7 @@ onMounted(loadLobby)
 </script>
 
 <template>
-  <view class="lobby">
+  <view class="lobby" :style="{ '--safe-top': statusBarHeight + 'px' }">
     <view class="lobby__header">
       <text class="lobby__title">
         🎭 剧本杀工坊
@@ -269,7 +271,7 @@ onMounted(loadLobby)
 }
 
 .lobby__header {
-  padding: calc(env(safe-area-inset-top) + 36rpx) 8rpx 36rpx;
+  padding: calc(var(--safe-top, env(safe-area-inset-top)) + 36rpx) 8rpx 36rpx;
 }
 
 .lobby__title {
@@ -283,7 +285,7 @@ onMounted(loadLobby)
   display: block;
   margin-top: 10rpx;
   font-size: 25rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .lobby__card {
@@ -304,7 +306,7 @@ onMounted(loadLobby)
 
 .lobby__arrow {
   font-size: 24rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .lobby__gen {
@@ -322,7 +324,7 @@ onMounted(loadLobby)
 }
 
 .lobby__ph {
-  color: #8a8aa0;
+  color: #ababc6;
 }
 .lobby__row {
   display: flex;
@@ -399,7 +401,7 @@ onMounted(loadLobby)
 
 .lobby__empty {
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .lobby__room {
@@ -477,7 +479,7 @@ onMounted(loadLobby)
 
 .role-pop__close {
   font-size: 32rpx;
-  color: #8a8aa0;
+  color: #ababc6;
   padding: 0 10rpx;
 }
 
@@ -512,6 +514,6 @@ page {
 
 /* placeholder 挂在原生 input 内部节点，scoped 属性选择器命中不到，必须放在非 scoped 块 */
 .lobby__ph {
-  color: #8a8aa0;
+  color: #ababc6;
 }
 </style>

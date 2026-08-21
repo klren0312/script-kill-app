@@ -162,7 +162,7 @@ const winnerText = computed(() => {
   margin-top: 18rpx;
   padding: 14rpx 18rpx;
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #ababc6;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12rpx;
 }

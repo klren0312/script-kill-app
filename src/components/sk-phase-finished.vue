@@ -185,7 +185,7 @@ const myRoleName = computed(() => store.myRoleView?.role.name || '我')
   align-items: center;
   justify-content: center;
   font-size: 24rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-phase-finished__footer {

@@ -44,7 +44,7 @@ const phaseTextMap: Record<Phase, string> = {
 }
 
 const phaseColorMap: Record<Phase, string> = {
-  setup: '#8a8aa0',
+  setup: '#ababc6',
   reading: '#60a5fa',
   discussion: '#a855f7',
   voting: '#f59e0b',

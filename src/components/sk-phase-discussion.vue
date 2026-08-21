@@ -158,7 +158,7 @@ const currentTurnName = computed(() => {
 
 .sk-phase-disc__fold-arrow {
   font-size: 20rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-phase-disc__clue {

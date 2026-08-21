@@ -53,12 +53,12 @@ const reasoning = computed(() => {
   align-items: center;
   gap: 16rpx;
   font-size: 28rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-reason__tip {
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-reason__item {

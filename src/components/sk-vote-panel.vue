@@ -84,7 +84,7 @@ const voteCount = computed(() => {
   display: block;
   margin-top: 8rpx;
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-vote__list {

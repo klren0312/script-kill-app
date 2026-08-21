@@ -158,7 +158,7 @@ const setting = computed(() => store.scriptView?.setting)
   padding: 12rpx 0;
   margin-bottom: 16rpx;
   font-size: 25rpx;
-  color: #8a8aa0;
+  color: #ababc6;
   border: 1rpx solid rgba(255, 255, 255, 0.12);
   border-radius: 999rpx;
   transition: all 0.2s ease;

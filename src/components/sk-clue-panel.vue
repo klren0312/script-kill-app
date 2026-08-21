@@ -82,7 +82,7 @@ const emit = defineEmits<{
 
 .sk-clue__none {
   font-size: 23rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 
 .sk-clue__item {
@@ -146,6 +146,6 @@ const emit = defineEmits<{
 
 .sk-clue__role-state {
   font-size: 20rpx;
-  color: #8a8aa0;
+  color: #ababc6;
 }
 </style>

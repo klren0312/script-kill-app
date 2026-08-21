@@ -102,7 +102,7 @@ const labelMap: Record<string, string> = {
 
 .sk-msg__type {
   font-size: 22rpx;
-  color: #8a8aa0;
+  color: #ababc6;
   margin-bottom: 6rpx;
 }
 
@@ -130,7 +130,7 @@ const labelMap: Record<string, string> = {
 .sk-msg--system .sk-msg__bubble {
   background: transparent;
   border: none;
-  color: #8a8aa0;
+  color: #ababc6;
   font-size: 23rpx;
   padding: 6rpx 0;
 }

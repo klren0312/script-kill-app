@@ -1,14 +1,30 @@
 <script setup lang="ts">
 // 房间页 = 流程驱动单视图。只负责 init / WS 连接 / CTA 兜底 / 返回大厅；
 // 界面渲染全部委托给 <sk-phase-flow>（阶段调度黑盒，见契约 §3）。
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { getGame, getMe, getScript, resumeGame, startGame } from '@/api/scriptKill'
 import { useGameSSE } from '@/composables/useGameSSE'
+import { useSafeTop } from '@/composables/useSafeTop'
 import { useScriptKillStore } from '@/stores/scriptKill'
 import SkPhaseFlow from '@/components/sk-phase-flow.vue'
 
 const store = useScriptKillStore()
 const socket = useGameSSE()
+const { statusBarHeight } = useSafeTop()
+
+// 传输方式：EventSource 不可用时降级为 WebSocket，需在页面上提示用户。
+const transport = socket.transport
+const isWsFallback = computed(() => transport.value === 'ws')
+let fallbackNotified = false
+watch(
+  () => transport.value,
+  (t) => {
+    if (t === 'ws' && !fallbackNotified) {
+      fallbackNotified = true
+      uni.showToast({ title: '当前环境不支持 SSE，已降级为 WebSocket', icon: 'none' })
+    }
+  },
+)
 
 const statusDot = computed(() => {
   switch (store.status) {
@@ -131,7 +147,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <view class="room">
+  <view class="room" :style="{ '--safe-top': statusBarHeight + 'px' }">
     <!-- 自定义顶部状态栏（返回键 + 剧本名 + 状态点） -->
     <view class="room__nav">
       <view class="room__nav-top">
@@ -144,6 +160,9 @@ onBeforeUnmount(() => {
           </text>
         </view>
         <view class="room__dot" :style="{ backgroundColor: statusDot }" />
+        <text v-if="isWsFallback" class="room__transport">
+          WS 降级
+        </text>
       </view>
     </view>
 
@@ -173,7 +192,7 @@ onBeforeUnmount(() => {
 
 .room__nav {
   flex-shrink: 0;
-  padding: calc(env(safe-area-inset-top) + 20rpx) 28rpx 16rpx;
+  padding: calc(var(--safe-top, env(safe-area-inset-top)) + 20rpx) 28rpx 16rpx;
   background: rgba(15, 15, 26, 0.85);
   backdrop-filter: blur(10rpx);
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.06);
@@ -209,13 +228,24 @@ onBeforeUnmount(() => {
   border-radius: 50%;
 }
 
+.room__transport {
+  margin-left: 10rpx;
+  padding: 2rpx 14rpx;
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.14);
+  border: 1rpx solid rgba(251, 191, 36, 0.35);
+  border-radius: 999rpx;
+}
+
 .room__body {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  /* 顶部状态栏避让：所有阶段视图统一下沉 safe-area-inset-top，
-     避免导航栏下方的首屏内容（状态胶囊、轮次、阶段 head）被状态栏盖住。 */
-  padding-top: env(safe-area-inset-top);
+  /* 顶部状态栏避让已由 room__nav 的 --safe-top 处理，这里不再重复下沉，
+     避免导航栏与内容区双重叠加状态栏高度。 */
+  padding-top: 0;
   box-sizing: border-box;
 }
 </style>

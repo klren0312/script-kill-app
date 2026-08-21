@@ -1,5 +1,8 @@
 import type { WsMessage } from '@/api/scriptKillTypes'
+import { ref } from 'vue'
 import { buildSseUrl, buildWsUrl } from '@/common/http.interceptor'
+
+export type SocketTransport = 'sse' | 'ws' | ''
 
 export type SocketStatus = 'connecting' | 'open' | 'closed' | 'error'
 
@@ -30,6 +33,7 @@ export function useGameSSE() {
   let closedByUser = false
   let opts: GameSocketOptions | null = null
   let retryCount = 0
+  const transport = ref<SocketTransport>('')
 
   function clearTimer() {
     if (timer) {
@@ -109,6 +113,11 @@ export function useGameSSE() {
     source.onerror = () => {
       clearHandshake()
       source.close()
+      if (closedByUser || !opts)
+        return
+      // 连接断开后上报错误态并自动重连，否则断开后房间会一直卡死（T 见连接态遮罩）。
+      options.onStatus?.('error', retryCount + 1, MAX_RETRIES + 1)
+      scheduleReconnect()
     }
   }
 
@@ -158,9 +167,11 @@ export function useGameSSE() {
     closedByUser = false
     retryCount = 0
     teardown()
+    const useSse = isEventSourceAvailable()
+    transport.value = useSse ? 'sse' : 'ws'
     options.onStatus?.('connecting', retryCount + 1, MAX_RETRIES + 1)
 
-    if (isEventSourceAvailable()) {
+    if (useSse) {
       connectSSE(options)
     }
     else {
@@ -173,5 +184,5 @@ export function useGameSSE() {
     teardown()
   }
 
-  return { connect, close }
+  return { connect, close, transport }
 }
