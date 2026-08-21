@@ -137,7 +137,7 @@ onMounted(loadLobby)
 </script>
 
 <template>
-  <view class="lobby" :style="{ '--safe-top': statusBarHeight + 'px' }">
+  <view class="lobby" :style="{ '--safe-top': `${statusBarHeight}px` }">
     <view class="lobby__header">
       <text class="lobby__title">
         🎭 剧本杀工坊

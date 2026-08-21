@@ -58,11 +58,13 @@ async function init() {
       const sRes = await getScript(gRes.scriptId)
       store.setScriptView(sRes)
     }
+    // 仅在快照加载成功后建立实时连接：init 失败（房间/剧本不存在）时继续连接
+    // 会触发 SSE 对不存在的 game 无限重连，故此处不放外层。
+    connectWs()
   }
   catch {
     uni.showToast({ title: '加载房间失败', icon: 'none' })
   }
-  connectWs()
 }
 
 // 自动开局仅发生在首次连接且仍处于 setup 时；reading 不再自动推进，
@@ -147,7 +149,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <view class="room" :style="{ '--safe-top': statusBarHeight + 'px' }">
+  <view class="room" :style="{ '--safe-top': `${statusBarHeight}px` }">
     <!-- 自定义顶部状态栏（返回键 + 剧本名 + 状态点） -->
     <view class="room__nav">
       <view class="room__nav-top">

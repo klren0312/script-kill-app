@@ -93,7 +93,7 @@ export function useGameSSE() {
   }
 
   function connectSSE(options: GameSocketOptions) {
-    const url = buildSseUrl(options.gameId, options.roleId)
+    const url = buildSseUrl(options.gameId)
     const source = new EventSource(url)
     es = source
 
